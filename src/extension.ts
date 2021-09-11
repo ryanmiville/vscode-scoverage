@@ -15,15 +15,15 @@ export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('helloworld.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		// vscode.window.showInformationMessage('Hello World from HelloWorld!');
-		setDecorators();
-		cover();
-	});
-
-	context.subscriptions.push(disposable);
+	context.subscriptions.push(
+		vscode.commands.registerCommand('helloworld.helloWorld', () => {
+			// The code you place here will be executed every time your command is executed
+			// Display a message box to the user
+			// vscode.window.showInformationMessage('Hello World from HelloWorld!');
+			setDecorators();
+			cover();
+		})
+	);
 }
 
 interface DecOpts {
@@ -120,7 +120,6 @@ async function cover() {
 	coverageData = {};
 	const report = await parseReport();
 
-	console.log(report);
 	setCoverageData(report);
 	vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
 }
@@ -169,7 +168,6 @@ function applyCodeCoverage(editor: vscode.TextEditor) {
 			const dec = {
 				range: editor.document.validateRange(new vscode.Range(startPos, endPos)),
 			};
-			// console.log(dec);
 			cov.push(dec);
 		});
 	}
@@ -180,42 +178,12 @@ function applyCodeCoverage(editor: vscode.TextEditor) {
 			const dec = {
 				range: editor.document.validateRange(new vscode.Range(startPos, endPos)),
 			};
-			console.log(dec);
 			uncov.push(dec);
 		});
 	}
 	editor.setDecorations(decorators.coveredHighlight.all, cov);
 	editor.setDecorations(decorators.uncoveredHighlight.all, uncov);
-	// report.packages.forEach(p =>
-	// 	p.classes.forEach(c =>
-	// 		c.methods.forEach(m =>
-	// 			m.statements.forEach(s =>
-	// 				updateStatement(editor, s)
-	// 			)
-	// 		)
-	// 	)
-	// );
-
-	// const cov: vscode.DecorationOptions[] = [];
-	// const uncov: vscode.DecorationOptions[] = [];
-	// for (let line = 0; line <= 100; line++) {
-	// 	const dec = {
-	// range: editor.document.validateRange(new vscode.Range(line, 0, line, Number.MAX_SAFE_INTEGER)),
-	// 	};
-
-	// 	(line % 2 === 0) ? cov.push(dec) : uncov.push(dec);
-	// }
-	// editor.setDecorations(decorators.coveredHighlight.all, cov);
-	// editor.setDecorations(decorators.uncoveredHighlight.all, uncov);
 }
 
-function updateStatement(editor: vscode.TextEditor, s: Statement) {
-
-	// const startPos = editor.document.positionAt(s.statement.start);
-	// const endPos = editor.document.positionAt(s.statement.end);
-
-	// console.log(`start: ${startPos}`);
-	// console.log(`end: ${endPos}`);
-}
 // this method is called when your extension is deactivated
 export function deactivate() { }
