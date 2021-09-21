@@ -24,6 +24,7 @@ export function activate(context: vscode.ExtensionContext) {
 			cover();
 		})
 	);
+	addOnChangeActiveTextEditorListeners(context);
 }
 
 interface DecOpts {
@@ -154,7 +155,10 @@ function statementCoverage(stmt: Statement) {
 	}
 }
 
-function applyCodeCoverage(editor: vscode.TextEditor) {
+function applyCodeCoverage(editor: vscode.TextEditor | undefined) {
+	if (!editor) {
+		return;
+	}
 	const cd = coverageData[editor.document.fileName];
 	if (cd === undefined) {
 		return;
@@ -187,3 +191,10 @@ function applyCodeCoverage(editor: vscode.TextEditor) {
 
 // this method is called when your extension is deactivated
 export function deactivate() { }
+
+function addOnChangeActiveTextEditorListeners(ctx: vscode.ExtensionContext) {
+		if (vscode.window.activeTextEditor) {
+			applyCodeCoverage(vscode.window.activeTextEditor);
+		}
+		vscode.window.onDidChangeActiveTextEditor(applyCodeCoverage, null, ctx.subscriptions);
+}
