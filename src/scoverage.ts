@@ -6,6 +6,7 @@
 
 import fs = require('fs');
 import { parseStringPromise } from 'xml2js';
+import * as vscode from 'vscode';
 
 export interface Report {
     packages: Package[];
@@ -87,9 +88,8 @@ function statement(xml: any): Statement[] {
 function flatten<T>(arr: T[][]): T[] {
     return arr.reduce((acc, val) => acc.concat(val), []);
 }
-export async function parseReport(): Promise<Report> {
-    const scoveragePath = '/Users/ryanmiville/dev/ce3/target/scala-2.13/scoverage-report/scoverage.xml';
-    const contents = fs.readFileSync(scoveragePath).toString();
+export async function parseReport(scoveragePath: vscode.Uri): Promise<Report> {
+    const contents = fs.readFileSync(scoveragePath.fsPath).toString();
     const xml = await parseStringPromise(contents, { explicitRoot: false });
     return report(xml);
 }

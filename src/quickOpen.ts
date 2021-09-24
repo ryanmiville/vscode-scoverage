@@ -46,7 +46,10 @@ class MessageItem implements QuickPickItem {
 	}
 }
 
-async function pickFile() {
+/**
+ * A file name picker using window.createQuickPick().
+ */
+export async function pickFile() {
 	const disposables: Disposable[] = [];
 	try {
 		return await new Promise<Uri | undefined>((resolve, reject) => {

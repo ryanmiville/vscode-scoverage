@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 
 import { parseReport, Report, Statement } from './scoverage';
+import { pickFile } from './quickOpen';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -183,9 +184,13 @@ function disposeDecorators() {
 
 
 async function cover() {
+	const uri = await pickFile();
+	if (!uri) {
+		return;
+	}
 	setDecorators();
 	coverageData = {};
-	const report = await parseReport();
+	const report = await parseReport(uri);
 
 	setCoverageData(report);
 	isCoverageApplied = true;
