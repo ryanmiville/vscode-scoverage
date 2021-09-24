@@ -20,8 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 			// The code you place here will be executed every time your command is executed
 			// Display a message box to the user
 			// vscode.window.showInformationMessage('Hello World from HelloWorld!');
-			setDecorators();
-			cover();
+			toggleCoverage();
 		})
 	);
 	addOnChangeActiveTextEditorListeners(context);
@@ -36,7 +35,25 @@ interface CoverageData {
 	uncoveredOptions: DecOpts[];
 	coveredOptions: DecOpts[];
 }
+
 let coverageData: { [key: string]: CoverageData } = {}; // actual file path to the coverage data.
+let isCoverageApplied = false;
+
+function emptyCoverageData(): CoverageData {
+	return {
+		uncoveredOptions: [],
+		coveredOptions: []
+	};
+}
+
+/**
+ * Clear the coverage on all files
+ */
+function clearCoverage() {
+	coverageData = {};
+	disposeDecorators();
+	isCoverageApplied = false;
+}
 
 interface Highlight {
 	top: vscode.TextEditorDecorationType;
@@ -117,11 +134,61 @@ function setDecorators() {
 	};
 }
 
+export async function toggleCoverage() {
+	// const editor = vscode.window.activeTextEditor;
+	// if (!editor) {
+	// 	vscode.window.showInformationMessage('No editor is active.');
+	// 	return;
+	// }
+
+	if (isCoverageApplied) {
+		clearCoverage();
+		return;
+	}
+
+	cover();
+	// const goConfig = getGoConfig();
+	// const cwd = path.dirname(editor.document.uri.fsPath);
+
+	// const testFlags = getTestFlags(goConfig);
+	// const isMod = await isModSupported(editor.document.uri);
+	// const testConfig: TestConfig = {
+	// 	goConfig,
+	// 	dir: cwd,
+	// 	flags: testFlags,
+	// 	background: true,
+	// 	isMod,
+	// 	applyCodeCoverage: true
+	// };
+
+	// return goTest(testConfig).then((success) => {
+	// 	if (!success) {
+	// 		showTestOutput();
+	// 	}
+	// });
+}
+
+function disposeDecorators() {
+	if (decorators) {
+		decorators.coveredHighlight.all.dispose();
+		decorators.coveredHighlight.top.dispose();
+		decorators.coveredHighlight.mid.dispose();
+		decorators.coveredHighlight.bot.dispose();
+		decorators.uncoveredHighlight.all.dispose();
+		decorators.uncoveredHighlight.top.dispose();
+		decorators.uncoveredHighlight.mid.dispose();
+		decorators.uncoveredHighlight.bot.dispose();
+	}
+}
+
+
 async function cover() {
+	setDecorators();
 	coverageData = {};
 	const report = await parseReport();
 
 	setCoverageData(report);
+	isCoverageApplied = true;
 	vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
 }
 
@@ -193,8 +260,8 @@ function applyCodeCoverage(editor: vscode.TextEditor | undefined) {
 export function deactivate() { }
 
 function addOnChangeActiveTextEditorListeners(ctx: vscode.ExtensionContext) {
-		if (vscode.window.activeTextEditor) {
-			applyCodeCoverage(vscode.window.activeTextEditor);
-		}
-		vscode.window.onDidChangeActiveTextEditor(applyCodeCoverage, null, ctx.subscriptions);
+	if (vscode.window.activeTextEditor) {
+		applyCodeCoverage(vscode.window.activeTextEditor);
+	}
+	vscode.window.onDidChangeActiveTextEditor(applyCodeCoverage, null, ctx.subscriptions);
 }

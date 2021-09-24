@@ -17,7 +17,7 @@
     "commands": [
       {
         "command": "helloworld.helloWorld",
-        "title": "Scala Coverage"
+        "title": "Scala: Toggle Test Coverage"
       }
     ]
   },
