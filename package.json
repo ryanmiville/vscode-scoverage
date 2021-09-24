@@ -10,14 +10,14 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:helloworld.helloWorld"
+    "onCommand:scoverage.toggleCoverage"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "helloworld.helloWorld",
-        "title": "Scala: Toggle Test Coverage"
+        "command": "scoverage.toggleCoverage",
+        "title": "Scoverage: Toggle Test Coverage"
       }
     ]
   },
