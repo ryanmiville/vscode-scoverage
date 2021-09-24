@@ -68,7 +68,7 @@ export async function pickFile() {
 					const cwds = workspace.workspaceFolders ? workspace.workspaceFolders.map(f => f.uri.fsPath) : [process.cwd()];
 					const q = process.platform === 'win32' ? '"' : '\'';
 					rgs = cwds.map(cwd => {
-						const rg = cp.exec(`rg --files -g ${q}*${value}*${q}`, { cwd }, (err, stdout) => {
+						const rg = cp.exec(`rg --files --glob-case-insensitive -g ${q}*${value}*${q}`, { cwd }, (err, stdout) => {
 							const i = rgs.indexOf(rg);
 							if (i !== -1) {
 								if (rgs.length === cwds.length) {
