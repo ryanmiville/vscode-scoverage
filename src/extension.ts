@@ -190,11 +190,15 @@ async function cover() {
 	}
 	setDecorators();
 	coverageData = {};
-	const report = await parseReport(uri);
+	try {
+		const report = await parseReport(uri);
 
-	setCoverageData(report);
-	isCoverageApplied = true;
-	vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
+		setCoverageData(report);
+		isCoverageApplied = true;
+		vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
+	} catch (error) {
+		vscode.window.showErrorMessage(`Failed to parse scoverage file.`);
+	}
 }
 
 function setCoverageData(report: Report) {
