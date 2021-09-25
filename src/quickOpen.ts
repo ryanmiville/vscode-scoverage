@@ -9,20 +9,6 @@ import { Uri, window, Disposable } from 'vscode';
 import { QuickPickItem } from 'vscode';
 import { workspace } from 'vscode';
 
-/**
- * A file opener using window.createQuickPick().
- * 
- * It shows how the list of items can be dynamically updated based on
- * the user's input in the filter field.
- */
-export async function quickOpen() {
-	const uri = await pickFile();
-	if (uri) {
-		const document = await workspace.openTextDocument(uri);
-		await window.showTextDocument(document);
-	}
-}
-
 class FileItem implements QuickPickItem {
 
 	label: string;
@@ -46,10 +32,37 @@ class MessageItem implements QuickPickItem {
 	}
 }
 
+function searchForFile() {
+	const fileName = 'scoverage.xml';
+	let files: FileItem[] = [];
+
+	const cwds = workspace.workspaceFolders ? workspace.workspaceFolders.map(f => f.uri.fsPath) : [process.cwd()];
+	const q = process.platform === 'win32' ? '"' : '\'';
+	cwds.forEach(cwd => {
+		const cmd = `rg --files --glob-case-insensitive --no-ignore -g ${q}*${fileName}*${q}`;
+		const stdout = cp.execSync(cmd, { cwd }).toString();
+		files = files.concat(
+			stdout
+				.split('\n')
+				.slice(0, 50)
+				.filter(relative => relative !== '') // TODO why doesn't quickPick need this?
+				.map(relative => new FileItem(Uri.file(cwd), Uri.file(path.join(cwd, relative))))
+		);
+	});
+	return files;
+}
 /**
  * A file name picker using window.createQuickPick().
  */
 export async function pickFile() {
+
+	const files = searchForFile();
+	if (files && files.length === 1) {
+		return await new Promise<Uri | undefined>((resolve) => {
+			resolve(files[0].uri);
+		});
+	}
+
 	const disposables: Disposable[] = [];
 	try {
 		return await new Promise<Uri | undefined>((resolve, reject) => {
