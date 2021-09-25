@@ -32,7 +32,7 @@ class MessageItem implements QuickPickItem {
 	}
 }
 
-function searchForFile() {
+function searchForFiles() {
 	const fileName = 'scoverage.xml';
 	let files: FileItem[] = [];
 
@@ -56,7 +56,7 @@ function searchForFile() {
  */
 export async function pickFile() {
 
-	const files = searchForFile();
+	const files = searchForFiles();
 	if (files && files.length === 1) {
 		return await new Promise<Uri | undefined>((resolve) => {
 			resolve(files[0].uri);
