@@ -54,8 +54,9 @@ export async function pickFile() {
 	try {
 		return await new Promise<Uri | undefined>((resolve, reject) => {
 			const input = window.createQuickPick<FileItem | MessageItem>();
-			input.placeholder = 'Type to search for files';
+			input.placeholder = 'Type to search for scoverage file';
 			input.value = "scoverage.xml";
+			input.title = "Pick Scoverage File";
 			let rgs: cp.ChildProcess[] = [];
 			disposables.push(
 				input.onDidChangeValue(value => {
@@ -68,7 +69,8 @@ export async function pickFile() {
 					const cwds = workspace.workspaceFolders ? workspace.workspaceFolders.map(f => f.uri.fsPath) : [process.cwd()];
 					const q = process.platform === 'win32' ? '"' : '\'';
 					rgs = cwds.map(cwd => {
-						const rg = cp.exec(`rg --files --glob-case-insensitive -g ${q}*${value}*${q}`, { cwd }, (err, stdout) => {
+						const cmd = `rg --files --glob-case-insensitive --no-ignore -g ${q}*${value}*${q}`;
+						const rg = cp.exec(cmd, { cwd }, (err, stdout) => {
 							const i = rgs.indexOf(rg);
 							if (i !== -1) {
 								if (rgs.length === cwds.length) {
