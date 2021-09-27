@@ -3,6 +3,7 @@
   "displayName": "Scoverage",
   "description": "",
   "version": "0.0.1",
+  "publisher": "ryanmiville",
   "engines": {
     "vscode": "^1.60.0"
   },
