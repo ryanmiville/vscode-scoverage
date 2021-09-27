@@ -1,6 +1,6 @@
 {
-  "name": "helloworld",
-  "displayName": "HelloWorld",
+  "name": "scoverage",
+  "displayName": "Scoverage",
   "description": "",
   "version": "0.0.1",
   "engines": {
