@@ -1,5 +1,6 @@
 .vscode/**
 .vscode-test/**
+.history
 out/test/**
 
 src/**
