@@ -270,7 +270,7 @@ function applyCodeCoverage(editor: vscode.TextEditor | undefined) {
 }
 
 function updateStatusBarItem(rate: number): void {
-	coverageStatusBarItem.text = `Coverage: ${rate}%`;
+	coverageStatusBarItem.text = `Total Coverage: ${rate}%`;
 	coverageStatusBarItem.show();
 }
 // this method is called when your extension is deactivated
