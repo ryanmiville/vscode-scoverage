@@ -5,6 +5,8 @@ import * as vscode from 'vscode';
 import { parseReport, Report, Statement } from './scoverage';
 import { pickFile } from './quickOpen';
 
+let coverageStatusBarItem: vscode.StatusBarItem;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -19,6 +21,10 @@ export function activate(context: vscode.ExtensionContext) {
 			toggleCoverage();
 		})
 	);
+	// create a new status bar item that we can now manage
+	coverageStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
+	context.subscriptions.push(coverageStatusBarItem);
+
 	addOnChangeActiveTextEditorListeners(context);
 }
 
@@ -139,6 +145,7 @@ export async function toggleCoverage() {
 
 	if (isCoverageApplied) {
 		clearCoverage();
+		coverageStatusBarItem.hide();
 		return;
 	}
 
@@ -188,7 +195,9 @@ async function cover() {
 	try {
 		const report = await parseReport(uri);
 
+		updateStatusBarItem(report.statementRate);
 		setCoverageData(report);
+
 		isCoverageApplied = true;
 		vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
 	} catch (error) {
@@ -260,6 +269,10 @@ function applyCodeCoverage(editor: vscode.TextEditor | undefined) {
 	editor.setDecorations(decorators.uncoveredHighlight.all, uncov);
 }
 
+function updateStatusBarItem(rate: number): void {
+	coverageStatusBarItem.text = `Coverage: ${rate}%`;
+	coverageStatusBarItem.show();
+}
 // this method is called when your extension is deactivated
 export function deactivate() { }
 
