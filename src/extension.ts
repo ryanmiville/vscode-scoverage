@@ -185,6 +185,8 @@ function disposeDecorators() {
 }
 
 
+const supportedVersions: string[] = ["1.0"];
+
 async function cover() {
 	const uri = await pickFile();
 	if (!uri) {
@@ -195,6 +197,10 @@ async function cover() {
 	try {
 		const report = await parseReport(uri);
 
+		if (!supportedVersions.includes(report.version)) {
+			vscode.window.showInformationMessage(`Scoverage version ${report.version} is not supported. Supported versions are ${supportedVersions}`);
+			return;
+		}
 		updateStatusBarItem(report.statementRate);
 		setCoverageData(report);
 

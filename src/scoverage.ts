@@ -11,6 +11,7 @@ import * as vscode from 'vscode';
 export interface Report {
     packages: Package[];
     statementRate: number;
+    version: string;
 }
 
 export interface Package {
@@ -42,6 +43,7 @@ function report(xml: any): Report {
     return {
         packages: flatten(xml.packages.map(pack)),
         statementRate: xml.$['statement-rate'],
+        version: xml.$.version,
     };
 }
 
