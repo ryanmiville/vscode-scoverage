@@ -31,6 +31,13 @@
         }
       ]
     },
+    "viewsWelcome": [
+      {
+        "view": "scoveragePackages",
+        "contents": "No Scoverage data loaded.\n[Load Scoverage Data](command:scoverage.toggleCoverage)",
+        "when": "workbenchState != empty"
+      }
+    ],
     "views": {
       "scoverage-explorer": [
         {
