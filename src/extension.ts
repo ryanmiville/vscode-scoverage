@@ -204,7 +204,7 @@ async function cover() {
 	coverageData = {};
 	try {
 		report = await parseReport(uri);
-		// packageProvider.refresh(report);
+		packageProvider.refresh(report);
 		if (!supportedVersions.includes(report.version)) {
 			vscode.window.showInformationMessage(`Scoverage version ${report.version} is not supported. Supported versions are ${supportedVersions}`);
 			return;
