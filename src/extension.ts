@@ -66,9 +66,9 @@ function clearCoverage() {
 }
 
 interface Highlight {
-	top: vscode.TextEditorDecorationType;
-	mid: vscode.TextEditorDecorationType;
-	bot: vscode.TextEditorDecorationType;
+	// top: vscode.TextEditorDecorationType;
+	// mid: vscode.TextEditorDecorationType;
+	// bot: vscode.TextEditorDecorationType;
 	all: vscode.TextEditorDecorationType;
 }
 
@@ -114,14 +114,14 @@ function setDecorators() {
 		backgroundColor: decoratorConfig.uncoveredHighlightColor,
 		borderColor: decoratorConfig.uncoveredBorderColor
 	};
-	const ctop = f(cov, 'solid solid none solid');
-	const cmid = f(cov, 'none solid none solid');
-	const cbot = f(cov, 'none solid solid solid');
-	const cone = f(cov, 'solid solid solid solid');
-	const utop = f(uncov, 'solid solid none solid');
-	const umid = f(uncov, 'none solid none solid');
-	const ubot = f(uncov, 'none solid solid solid');
-	const uone = f(uncov, 'solid solid solid solid');
+	// const ctop = f(cov, 'solid solid none solid');
+	// const cmid = f(cov, 'none solid none solid');
+	// const cbot = f(cov, 'none solid solid solid');
+	// const cone = f(cov, 'solid solid solid solid');
+	// const utop = f(uncov, 'solid solid none solid');
+	// const umid = f(uncov, 'none solid none solid');
+	// const ubot = f(uncov, 'none solid solid solid');
+	// const uone = f(uncov, 'solid solid solid solid');
 
 	const cnone = f(cov, 'none none none none');
 	const unone = f(uncov, 'none none none none');
@@ -130,16 +130,16 @@ function setDecorators() {
 		coveredHighlight: {
 			// all: vscode.window.createTextEditorDecorationType(cone),
 			all: vscode.window.createTextEditorDecorationType(cnone),
-			top: vscode.window.createTextEditorDecorationType(ctop),
-			mid: vscode.window.createTextEditorDecorationType(cmid),
-			bot: vscode.window.createTextEditorDecorationType(cbot)
+			// top: vscode.window.createTextEditorDecorationType(ctop),
+			// mid: vscode.window.createTextEditorDecorationType(cmid),
+			// bot: vscode.window.createTextEditorDecorationType(cbot)
 		},
 		uncoveredHighlight: {
 			// all: vscode.window.createTextEditorDecorationType(uone),
 			all: vscode.window.createTextEditorDecorationType(unone),
-			top: vscode.window.createTextEditorDecorationType(utop),
-			mid: vscode.window.createTextEditorDecorationType(umid),
-			bot: vscode.window.createTextEditorDecorationType(ubot)
+			// top: vscode.window.createTextEditorDecorationType(utop),
+			// mid: vscode.window.createTextEditorDecorationType(umid),
+			// bot: vscode.window.createTextEditorDecorationType(ubot)
 		}
 	};
 }
@@ -182,13 +182,13 @@ export async function toggleCoverage() {
 function disposeDecorators() {
 	if (decorators) {
 		decorators.coveredHighlight.all.dispose();
-		decorators.coveredHighlight.top.dispose();
-		decorators.coveredHighlight.mid.dispose();
-		decorators.coveredHighlight.bot.dispose();
+		// decorators.coveredHighlight.top.dispose();
+		// decorators.coveredHighlight.mid.dispose();
+		// decorators.coveredHighlight.bot.dispose();
 		decorators.uncoveredHighlight.all.dispose();
-		decorators.uncoveredHighlight.top.dispose();
-		decorators.uncoveredHighlight.mid.dispose();
-		decorators.uncoveredHighlight.bot.dispose();
+		// decorators.uncoveredHighlight.top.dispose();
+		// decorators.uncoveredHighlight.mid.dispose();
+		// decorators.uncoveredHighlight.bot.dispose();
 	}
 }
 
