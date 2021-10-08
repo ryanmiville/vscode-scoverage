@@ -4,15 +4,23 @@ import * as vscode from 'vscode';
 
 import { parseReport, Report, Statement } from './scoverage';
 import { pickFile } from './quickOpen';
+import { PackageProvider } from './scoveragePackages';
 
 let coverageStatusBarItem: vscode.StatusBarItem;
 
+let report: Report;
+
+let packageProvider: PackageProvider;
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
 	// The commandId parameter must match the command field in package.json
+
+	packageProvider = new PackageProvider();
+	vscode.window.registerTreeDataProvider('scoveragePackages', packageProvider);
+
 	context.subscriptions.push(
 		vscode.commands.registerCommand('scoverage.toggleCoverage', () => {
 			// The code you place here will be executed every time your command is executed
@@ -195,8 +203,8 @@ async function cover() {
 	setDecorators();
 	coverageData = {};
 	try {
-		const report = await parseReport(uri);
-
+		report = await parseReport(uri);
+		packageProvider.refresh(report);
 		if (!supportedVersions.includes(report.version)) {
 			vscode.window.showInformationMessage(`Scoverage version ${report.version} is not supported. Supported versions are ${supportedVersions}`);
 			return;

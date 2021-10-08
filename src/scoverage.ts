@@ -1,7 +1,3 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use strict';
 
 import fs = require('fs');
@@ -15,13 +11,17 @@ export interface Report {
 }
 
 export interface Package {
+    type: 'package';
     name: string;
+    statementRate: number;
     classes: Class[];
 }
 
 export interface Class {
+    type: 'class';
     name: string;
     fileName: string;
+    statementRate: number;
     methods: Method[];
 }
 
@@ -50,7 +50,9 @@ function report(xml: any): Report {
 function pack(xml: any): Package[] {
     return xml.package.map((p: any) => {
         return <Package>{
+            type: 'package',
             name: p.$.name,
+            statementRate: p.$['statement-rate'],
             classes: flatten(p.classes.map(klass)),
         };
     });
@@ -59,8 +61,10 @@ function pack(xml: any): Package[] {
 function klass(xml: any): Class[] {
     return xml.class.map((c: any) => {
         return <Class>{
+            type: 'class',
             name: c.$.name,
             fileName: c.$.filename,
+            statementRate: c.$['statement-rate'],
             methods: flatten(c.methods.map(method)),
         };
     });

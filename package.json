@@ -11,7 +11,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:scoverage.toggleCoverage"
+    "onCommand:scoverage.toggleCoverage",
+    "onView:scoveragePackages"
   ],
   "main": "./out/extension.js",
   "contributes": {
@@ -20,7 +21,31 @@
         "command": "scoverage.toggleCoverage",
         "title": "Scoverage: Toggle Test Coverage"
       }
-    ]
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "scoverage-explorer",
+          "title": "Scoverage",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "scoveragePackages",
+        "contents": "No Scoverage data loaded.\n[Load Scoverage Data](command:scoverage.toggleCoverage)",
+        "when": "workbenchState != empty"
+      }
+    ],
+    "views": {
+      "scoverage-explorer": [
+        {
+          "id": "scoveragePackages",
+          "name": "Packages"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
