@@ -12,12 +12,9 @@ import { workspace } from 'vscode';
 class FileItem implements QuickPickItem {
 
 	label: string;
-	// description: string;
 
 	constructor(public base: Uri, public uri: Uri) {
-		// this.label = path.basename(uri.fsPath);
 		this.label = path.relative(base.fsPath, uri.fsPath);
-		// this.description = path.dirname(path.relative(base.fsPath, uri.fsPath));
 	}
 }
 

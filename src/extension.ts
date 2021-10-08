@@ -48,14 +48,12 @@ function clearCoverage() {
 }
 
 let decorators: {
-	// type: 'highlight' | 'gutter';
 	coveredHighlight: vscode.TextEditorDecorationType;
 	uncoveredHighlight: vscode.TextEditorDecorationType;
 };
 
 let decoratorConfig: {
 	[key: string]: any;
-	// type: 'highlight' | 'gutter';
 	coveredHighlightColor: string;
 	uncoveredHighlightColor: string;
 	coveredBorderColor: string;
@@ -64,21 +62,12 @@ let decoratorConfig: {
 
 function setDecorators() {
 	decoratorConfig = {
-		// type: 'highlight',
 		coveredHighlightColor: 'rgba(64,128,128,0.5)',
 		coveredBorderColor: 'rgba(64,128,128,1.0)',
 		uncoveredHighlightColor: 'rgba(128,64,64,0.25)',
 		uncoveredBorderColor: 'rgba(128,64,64,1.0)',
 	};
 
-	const f = (x: { overviewRulerColor: string; backgroundColor: string }, arg: string) => {
-		const y = {
-			overviewRulerLane: 2,
-			borderStyle: arg,
-			borderWidth: '2px'
-		};
-		return Object.assign(y, x);
-	};
 	const cov = {
 		overviewRulerColor: 'green',
 		backgroundColor: decoratorConfig.coveredHighlightColor,
@@ -89,13 +78,9 @@ function setDecorators() {
 		backgroundColor: decoratorConfig.uncoveredHighlightColor,
 		borderColor: decoratorConfig.uncoveredBorderColor
 	};
-
-	const cnone = f(cov, 'none none none none');
-	const unone = f(uncov, 'none none none none');
 	decorators = {
-		// type: decoratorConfig.type,
-		coveredHighlight: vscode.window.createTextEditorDecorationType(cnone),
-		uncoveredHighlight: vscode.window.createTextEditorDecorationType(unone),
+		coveredHighlight: vscode.window.createTextEditorDecorationType(cov),
+		uncoveredHighlight: vscode.window.createTextEditorDecorationType(uncov),
 	};
 }
 

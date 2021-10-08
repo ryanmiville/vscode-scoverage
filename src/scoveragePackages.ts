@@ -28,15 +28,10 @@ export class PackageProvider implements vscode.TreeDataProvider<Node> {
 		return item;
 	}
 
-	// private uri: vscode.Uri = vscode.Uri.file('/Users/ryanmiville/dev/fluxus/target/scala-2.13/scoverage-report/scoverage.xml');
-
 	getChildren(element?: Node): vscode.ProviderResult<Node[]> {
 		if (!this.report) {
 			console.log('report was undefined');
 			return [];
-			// return parseReport(this.uri)
-			// 	.then(r => { this.report = r; })
-			// 	.then(() => this.getChildren(element));
 		}
 		if (!element) {
 			console.log('element was undefined');
