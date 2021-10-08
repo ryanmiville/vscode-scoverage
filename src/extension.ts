@@ -153,7 +153,7 @@ export async function toggleCoverage() {
 
 	if (isCoverageApplied) {
 		clearCoverage();
-		coverageStatusBarItem.hide();
+		// coverageStatusBarItem.hide();
 		return;
 	}
 
