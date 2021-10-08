@@ -1,5 +1,3 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 
 import { parseReport, Report, Statement } from './scoverage';
@@ -11,25 +9,15 @@ let coverageStatusBarItem: vscode.StatusBarItem;
 let report: Report;
 
 let packageProvider: PackageProvider;
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-
 	packageProvider = new PackageProvider();
 	vscode.window.registerTreeDataProvider('scoveragePackages', packageProvider);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('scoverage.toggleCoverage', () => {
-			// The code you place here will be executed every time your command is executed
-			// Display a message box to the user
-			// vscode.window.showInformationMessage('Hello World from HelloWorld!');
 			toggleCoverage();
 		})
 	);
-	// create a new status bar item that we can now manage
 	coverageStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
 	context.subscriptions.push(coverageStatusBarItem);
 
@@ -49,12 +37,6 @@ interface CoverageData {
 let coverageData: { [key: string]: CoverageData } = {}; // actual file path to the coverage data.
 let isCoverageApplied = false;
 
-function emptyCoverageData(): CoverageData {
-	return {
-		uncoveredOptions: [],
-		coveredOptions: []
-	};
-}
 
 /**
  * Clear the coverage on all files
@@ -65,22 +47,15 @@ function clearCoverage() {
 	isCoverageApplied = false;
 }
 
-interface Highlight {
-	// top: vscode.TextEditorDecorationType;
-	// mid: vscode.TextEditorDecorationType;
-	// bot: vscode.TextEditorDecorationType;
-	all: vscode.TextEditorDecorationType;
-}
-
 let decorators: {
-	type: 'highlight' | 'gutter';
-	coveredHighlight: Highlight;
-	uncoveredHighlight: Highlight;
+	// type: 'highlight' | 'gutter';
+	coveredHighlight: vscode.TextEditorDecorationType;
+	uncoveredHighlight: vscode.TextEditorDecorationType;
 };
 
 let decoratorConfig: {
 	[key: string]: any;
-	type: 'highlight' | 'gutter';
+	// type: 'highlight' | 'gutter';
 	coveredHighlightColor: string;
 	uncoveredHighlightColor: string;
 	coveredBorderColor: string;
@@ -89,7 +64,7 @@ let decoratorConfig: {
 
 function setDecorators() {
 	decoratorConfig = {
-		type: 'highlight',
+		// type: 'highlight',
 		coveredHighlightColor: 'rgba(64,128,128,0.5)',
 		coveredBorderColor: 'rgba(64,128,128,1.0)',
 		uncoveredHighlightColor: 'rgba(128,64,64,0.25)',
@@ -114,81 +89,28 @@ function setDecorators() {
 		backgroundColor: decoratorConfig.uncoveredHighlightColor,
 		borderColor: decoratorConfig.uncoveredBorderColor
 	};
-	// const ctop = f(cov, 'solid solid none solid');
-	// const cmid = f(cov, 'none solid none solid');
-	// const cbot = f(cov, 'none solid solid solid');
-	// const cone = f(cov, 'solid solid solid solid');
-	// const utop = f(uncov, 'solid solid none solid');
-	// const umid = f(uncov, 'none solid none solid');
-	// const ubot = f(uncov, 'none solid solid solid');
-	// const uone = f(uncov, 'solid solid solid solid');
 
 	const cnone = f(cov, 'none none none none');
 	const unone = f(uncov, 'none none none none');
 	decorators = {
-		type: decoratorConfig.type,
-		coveredHighlight: {
-			// all: vscode.window.createTextEditorDecorationType(cone),
-			all: vscode.window.createTextEditorDecorationType(cnone),
-			// top: vscode.window.createTextEditorDecorationType(ctop),
-			// mid: vscode.window.createTextEditorDecorationType(cmid),
-			// bot: vscode.window.createTextEditorDecorationType(cbot)
-		},
-		uncoveredHighlight: {
-			// all: vscode.window.createTextEditorDecorationType(uone),
-			all: vscode.window.createTextEditorDecorationType(unone),
-			// top: vscode.window.createTextEditorDecorationType(utop),
-			// mid: vscode.window.createTextEditorDecorationType(umid),
-			// bot: vscode.window.createTextEditorDecorationType(ubot)
-		}
+		// type: decoratorConfig.type,
+		coveredHighlight: vscode.window.createTextEditorDecorationType(cnone),
+		uncoveredHighlight: vscode.window.createTextEditorDecorationType(unone),
 	};
 }
 
 export async function toggleCoverage() {
-	// const editor = vscode.window.activeTextEditor;
-	// if (!editor) {
-	// 	vscode.window.showInformationMessage('No editor is active.');
-	// 	return;
-	// }
-
 	if (isCoverageApplied) {
 		clearCoverage();
-		// coverageStatusBarItem.hide();
 		return;
 	}
-
 	cover();
-	// const goConfig = getGoConfig();
-	// const cwd = path.dirname(editor.document.uri.fsPath);
-
-	// const testFlags = getTestFlags(goConfig);
-	// const isMod = await isModSupported(editor.document.uri);
-	// const testConfig: TestConfig = {
-	// 	goConfig,
-	// 	dir: cwd,
-	// 	flags: testFlags,
-	// 	background: true,
-	// 	isMod,
-	// 	applyCodeCoverage: true
-	// };
-
-	// return goTest(testConfig).then((success) => {
-	// 	if (!success) {
-	// 		showTestOutput();
-	// 	}
-	// });
 }
 
 function disposeDecorators() {
 	if (decorators) {
-		decorators.coveredHighlight.all.dispose();
-		// decorators.coveredHighlight.top.dispose();
-		// decorators.coveredHighlight.mid.dispose();
-		// decorators.coveredHighlight.bot.dispose();
-		decorators.uncoveredHighlight.all.dispose();
-		// decorators.uncoveredHighlight.top.dispose();
-		// decorators.uncoveredHighlight.mid.dispose();
-		// decorators.uncoveredHighlight.bot.dispose();
+		decorators.coveredHighlight.dispose();
+		decorators.uncoveredHighlight.dispose();
 	}
 }
 
@@ -235,7 +157,7 @@ function statementCoverage(stmt: Statement) {
 		start: stmt.start,
 		end: stmt.end,
 	};
-	if (coverageData[file] === undefined) {
+	if (!coverageData[file]) {
 		const cd: CoverageData = {
 			coveredOptions: [],
 			uncoveredOptions: [],
@@ -279,8 +201,8 @@ function applyCodeCoverage(editor: vscode.TextEditor | undefined) {
 			uncov.push(dec);
 		});
 	}
-	editor.setDecorations(decorators.coveredHighlight.all, cov);
-	editor.setDecorations(decorators.uncoveredHighlight.all, uncov);
+	editor.setDecorations(decorators.coveredHighlight, cov);
+	editor.setDecorations(decorators.uncoveredHighlight, uncov);
 }
 
 function updateStatusBarItem(rate: number): void {
