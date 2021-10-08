@@ -34,7 +34,9 @@ interface CoverageData {
 	coveredOptions: DecOpts[];
 }
 
-let coverageData: { [key: string]: CoverageData } = {}; // actual file path to the coverage data.
+// map of file path -> statement coverage ranges
+let coverageData: { [key: string]: CoverageData } = {};
+
 let isCoverageApplied = false;
 
 
