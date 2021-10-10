@@ -44,7 +44,7 @@ let isCoverageApplied = false;
  * Clear the coverage on all files
  */
 function clearCoverage() {
-	coverageData = {};
+	// coverageData = {};
 	disposeDecorators();
 	isCoverageApplied = false;
 }
@@ -88,10 +88,15 @@ function setDecorators() {
 
 export async function toggleCoverage() {
 	if (isCoverageApplied) {
-		clearCoverage();
-		return;
+		toggleOff();
+	} else {
+		toggleOn();
 	}
-	cover();
+}
+
+function toggleOff() {
+	disposeDecorators();
+	isCoverageApplied = false;
 }
 
 function disposeDecorators() {
@@ -103,6 +108,39 @@ function disposeDecorators() {
 
 
 const supportedVersions: string[] = ["1.0"];
+
+async function toggleOn() {
+	if (!report) {
+		await loadCoverageData();
+	}
+	displayCoverageData();
+}
+
+async function loadCoverageData() {
+	const uri = await pickFile();
+	if (!uri) {
+		return;
+	}
+	coverageData = {};
+	try {
+		report = await parseReport(uri);
+		packageProvider.refresh(report);
+		if (!supportedVersions.includes(report.version)) {
+			vscode.window.showInformationMessage(`Scoverage version ${report.version} is not supported. Supported versions are ${supportedVersions}`);
+			return;
+		}
+		updateStatusBarItem(report.statementRate);
+		setCoverageData(report);
+	} catch (error) {
+		vscode.window.showErrorMessage(`Failed to parse scoverage file.`);
+	}
+}
+
+function displayCoverageData() {
+	setDecorators();
+	isCoverageApplied = true;
+	vscode.window.visibleTextEditors.forEach(applyCodeCoverage);
+}
 
 async function cover() {
 	const uri = await pickFile();
