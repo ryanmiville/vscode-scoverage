@@ -6,7 +6,7 @@ import { PackageProvider } from './scoveragePackages';
 
 let coverageStatusBarItem: vscode.StatusBarItem;
 
-let report: Report;
+let report: Report | undefined;
 
 let packageProvider: PackageProvider;
 export function activate(context: vscode.ExtensionContext) {
@@ -16,6 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('scoverage.toggleCoverage', () => {
 			toggleCoverage();
+		}),
+		vscode.commands.registerCommand('scoverage.clearData', () => {
+			clearCoverage();
 		})
 	);
 	coverageStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
@@ -44,7 +47,8 @@ let isCoverageApplied = false;
  * Clear the coverage on all files
  */
 function clearCoverage() {
-	// coverageData = {};
+	report = undefined;
+	coverageData = {};
 	disposeDecorators();
 	isCoverageApplied = false;
 }

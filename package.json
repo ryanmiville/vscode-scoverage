@@ -12,6 +12,7 @@
   ],
   "activationEvents": [
     "onCommand:scoverage.toggleCoverage",
+    "onCommand:scoverage.clearData",
     "onView:scoveragePackages"
   ],
   "main": "./out/extension.js",
@@ -20,6 +21,10 @@
       {
         "command": "scoverage.toggleCoverage",
         "title": "Scoverage: Toggle Test Coverage"
+      },
+      {
+        "command": "scoverage.clearData",
+        "title": "Scoverage: Clear Coverage Data"
       }
     ],
     "views": {
