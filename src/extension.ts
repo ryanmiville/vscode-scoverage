@@ -50,6 +50,8 @@ function clearCoverage() {
 	report = undefined;
 	coverageData = {};
 	disposeDecorators();
+	packageProvider.refresh(report);
+	coverageStatusBarItem.hide();
 	isCoverageApplied = false;
 }
 

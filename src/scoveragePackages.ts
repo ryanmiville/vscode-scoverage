@@ -10,7 +10,7 @@ export class PackageProvider implements vscode.TreeDataProvider<Node> {
 	constructor() {
 	}
 
-	refresh(r: Report): void {
+	refresh(r: Report | undefined): void {
 		this.report = r;
 		this._onDidChangeTreeData.fire();
 	}
@@ -30,16 +30,12 @@ export class PackageProvider implements vscode.TreeDataProvider<Node> {
 
 	getChildren(element?: Node): vscode.ProviderResult<Node[]> {
 		if (!this.report) {
-			console.log('report was undefined');
 			return [];
 		}
 		if (!element) {
-			console.log('element was undefined');
-			console.log(`report was ${this.report}`);
 			return Promise.resolve(this.report?.packages);
 		}
 		if (element?.type === 'package') {
-			console.log('element was a package');
 			const classes = element.classes.map(c => {
 				c.name = c.name.replace(`${element.name}.`, '');
 				return c;
