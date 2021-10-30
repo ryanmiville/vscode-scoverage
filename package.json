@@ -13,6 +13,7 @@
   "activationEvents": [
     "onCommand:scoverage.toggleCoverage",
     "onCommand:scoverage.clearData",
+    "onCommand:scoverage.refreshFile",
     "onView:scoveragePackages"
   ],
   "main": "./out/extension.js",
@@ -24,7 +25,13 @@
       },
       {
         "command": "scoverage.clearData",
-        "title": "Scoverage: Clear Coverage Data"
+        "title": "Scoverage: Clear Coverage Data",
+        "icon": "$(clear-all)"
+      },
+      {
+        "command": "scoverage.refreshFile",
+        "title": "Scoverage: Refresh Coverage File",
+        "icon": "$(refresh)"
       }
     ],
     "views": {
@@ -41,7 +48,21 @@
         "contents": "No Scoverage data loaded.\n[Load Scoverage Data](command:scoverage.toggleCoverage)",
         "when": "workbenchState != empty"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "scoverage.clearData",
+          "when": "view == scoveragePackages",
+          "group": "navigation"
+        },
+        {
+          "command": "scoverage.refreshFile",
+          "when": "view == scoveragePackages",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

@@ -8,6 +8,8 @@ let coverageStatusBarItem: vscode.StatusBarItem;
 
 let report: Report | undefined;
 
+let fileUri: vscode.Uri | undefined;
+
 let packageProvider: PackageProvider;
 export function activate(context: vscode.ExtensionContext) {
 	packageProvider = new PackageProvider();
@@ -19,6 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
 		}),
 		vscode.commands.registerCommand('scoverage.clearData', () => {
 			clearCoverage();
+		}),
+		vscode.commands.registerCommand('scoverage.refreshFile', () => {
+			refreshCoverageFile();
 		})
 	);
 	coverageStatusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 0);
@@ -48,6 +53,7 @@ let isCoverageApplied = false;
  */
 function clearCoverage() {
 	report = undefined;
+	fileUri = undefined;
 	coverageData = {};
 	disposeDecorators();
 	packageProvider.refresh(report);
@@ -92,6 +98,12 @@ function setDecorators() {
 	};
 }
 
+async function refreshCoverageFile() {
+	report = undefined;
+	toggleOff();
+	toggleOn();
+}
+
 export async function toggleCoverage() {
 	if (isCoverageApplied) {
 		toggleOff();
@@ -123,13 +135,15 @@ async function toggleOn() {
 }
 
 async function loadCoverageData() {
-	const uri = await pickFile();
-	if (!uri) {
-		return;
+	if (!fileUri) {
+		fileUri = await pickFile();
+		if (!fileUri) {
+			return;
+		}
 	}
 	coverageData = {};
 	try {
-		report = await parseReport(uri);
+		report = await parseReport(fileUri);
 		packageProvider.refresh(report);
 		if (!supportedVersions.includes(report.version)) {
 			vscode.window.showInformationMessage(`Scoverage version ${report.version} is not supported. Supported versions are ${supportedVersions}`);
