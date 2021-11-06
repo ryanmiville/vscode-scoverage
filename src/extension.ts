@@ -130,6 +130,9 @@ const supportedVersions: string[] = ["1.0"];
 async function toggleOn() {
 	if (!report) {
 		await loadCoverageData();
+		if (!report) {
+			return;
+		}
 	}
 	displayCoverageData();
 }

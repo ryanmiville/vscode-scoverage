@@ -87,6 +87,7 @@
     "vscode-test": "^1.5.2"
   },
   "dependencies": {
+    "vscode-ripgrep": "^1.12.1",
     "xml2js": "^0.4.23"
   }
 }

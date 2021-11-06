@@ -8,6 +8,7 @@ import * as cp from 'child_process';
 import { Uri, window, Disposable } from 'vscode';
 import { QuickPickItem } from 'vscode';
 import { workspace } from 'vscode';
+import { rgPath } from 'vscode-ripgrep';
 
 class FileItem implements QuickPickItem {
 
@@ -26,7 +27,7 @@ function searchForFiles(): FileItem[] {
 	const q = process.platform === 'win32' ? '"' : '\'';
 	try {
 		cwds.forEach(cwd => {
-			const cmd = `rg --files --glob-case-insensitive --no-ignore -g ${q}*${fileName}*${q}`;
+			const cmd = `${rgPath} --files --glob-case-insensitive --no-ignore -g ${q}*${fileName}*${q}`;
 			const stdout = cp.execSync(cmd, { cwd }).toString();
 			files = files.concat(
 				stdout
