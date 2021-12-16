@@ -68,18 +68,18 @@ let decorators: {
 
 let decoratorConfig: {
 	[key: string]: any;
-	coveredHighlightColor: string;
-	uncoveredHighlightColor: string;
-	coveredBorderColor: string;
-	uncoveredBorderColor: string;
+	coveredHighlightColor: vscode.ThemeColor;
+	uncoveredHighlightColor: vscode.ThemeColor;
+	coveredBorderColor: vscode.ThemeColor;
+	uncoveredBorderColor: vscode.ThemeColor;
 };
 
 function setDecorators() {
 	decoratorConfig = {
-		coveredHighlightColor: 'rgba(64,128,128,0.5)',
-		coveredBorderColor: 'rgba(64,128,128,1.0)',
-		uncoveredHighlightColor: 'rgba(128,64,64,0.25)',
-		uncoveredBorderColor: 'rgba(128,64,64,1.0)',
+		coveredHighlightColor: new vscode.ThemeColor('diffEditor.insertedTextBackground'),
+		coveredBorderColor: new vscode.ThemeColor('diffEditor.insertedTextBorder'),
+		uncoveredHighlightColor: new vscode.ThemeColor('diffEditor.removedTextBackground'),
+		uncoveredBorderColor: new vscode.ThemeColor('diffEditor.removedTextBorder'),
 	};
 
 	const cov = {
